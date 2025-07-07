@@ -83,11 +83,7 @@ passport.deserializeUser((user, done) => {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Simple root endpoint for Railway health check
-app.get('/', (req, res) => {
-  console.log('Root endpoint requested');
-  res.send('BallisticWorks Market - Server is running!');
-});
+// Simple root endpoint will be handled by React app in production
 
 // Health check (before other routes)
 app.get('/health', (req, res) => {
@@ -112,6 +108,22 @@ if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../client/build');
   console.log(`Serving static files from: ${buildPath}`);
   app.use(express.static(buildPath));
+  
+  // Handle React routing - serve React app for all non-API routes (must be last)
+  app.get('*', (req, res) => {
+    // Skip API routes and specific endpoints
+    if (req.path.startsWith('/api') || 
+        req.path.startsWith('/auth') || 
+        req.path.startsWith('/uploads') ||
+        req.path === '/health' ||
+        req.path === '/test') {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    
+    const indexPath = path.join(__dirname, '../client/build', 'index.html');
+    console.log(`Serving React app from: ${indexPath} for ${req.path}`);
+    res.sendFile(indexPath);
+  });
 }
 
 // Error handling middleware
