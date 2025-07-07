@@ -1,0 +1,16 @@
+{
+  "name": "ballisticworks-website",
+  "version": "1.0.0",
+  "description": "BallisticWorks Organization Website",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -s -p $PORT",
+    "build": "echo 'No build required for static site'"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
