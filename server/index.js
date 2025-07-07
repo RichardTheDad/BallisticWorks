@@ -71,7 +71,12 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
   
-  app.get('*', (req, res) => {
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/uploads')) {
+      return next();
+    }
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 }

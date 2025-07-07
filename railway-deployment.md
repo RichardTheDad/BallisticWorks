@@ -51,6 +51,8 @@ ADMIN_STEAM_ID=your_steam_id_here
    - Build the React app
    - Start the server
 
+**If build fails:** Check the build logs in Railway dashboard and verify all environment variables are set.
+
 ## 3. Configure Steam OAuth
 
 ### Update Steam API Settings
