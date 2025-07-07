@@ -8,9 +8,10 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 console.log(`🔧 Starting with PORT: ${PORT} (from env: ${process.env.PORT})`);
+console.log(`🔧 Railway expects app on: PORT ${process.env.PORT || 'not set'}`);
 
 // Import routes
 const authRoutes = require('./routes/auth');
