@@ -95,24 +95,7 @@ router.post('/products', requireAdmin, upload.single('image'), async (req, res) 
 // Get all orders
 router.get('/orders', requireAdmin, async (req, res) => {
   try {
-    const orders = await database.db.all(`
-      SELECT o.*, u.display_name, u.roleplay_name, u.phone_number, u.bank_number, u.email
-      FROM orders o 
-      JOIN users u ON o.user_id = u.id 
-      ORDER BY o.created_at DESC
-    `);
-    
-    // Get order items for each order
-    for (let order of orders) {
-      const orderItems = await database.db.all(`
-        SELECT oi.*, p.name as product_name 
-        FROM order_items oi 
-        JOIN products p ON oi.product_id = p.id 
-        WHERE oi.order_id = ?
-      `, [order.id]);
-      order.items = orderItems;
-    }
-    
+    const orders = await database.getAllOrders();
     res.json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -131,10 +114,7 @@ router.put('/orders/:id/status', requireAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
-    await database.db.run(
-      'UPDATE orders SET status = ?, admin_notes = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [status, admin_notes || null, orderId]
-    );
+    await database.updateOrderStatus(orderId, status, admin_notes || null);
 
     res.json({ message: 'Order status updated successfully' });
   } catch (error) {
@@ -148,10 +128,7 @@ router.delete('/products/:id', requireAdmin, async (req, res) => {
   try {
     const productId = req.params.id;
     
-    await database.db.run(
-      'UPDATE products SET is_active = 0 WHERE id = ?',
-      [productId]
-    );
+    await database.deleteProduct(productId);
 
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {

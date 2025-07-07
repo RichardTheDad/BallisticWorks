@@ -1,11 +1,16 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+// Use PostgreSQL if DATABASE_URL is provided (Railway), otherwise use SQLite
+if (process.env.DATABASE_URL) {
+  const PostgresDatabase = require('./postgres-database');
+  module.exports = new PostgresDatabase();
+} else {
+  const sqlite3 = require('sqlite3').verbose();
+  const path = require('path');
 
-class Database {
-  constructor() {
-    this.db = new sqlite3.Database(process.env.DB_PATH || './database.sqlite');
-    this.init();
-  }
+  class Database {
+    constructor() {
+      this.db = new sqlite3.Database(process.env.DB_PATH || './database.sqlite');
+      this.init();
+    }
 
   init() {
     // Create tables if they don't exist
@@ -283,9 +288,10 @@ class Database {
     });
   }
 
-  close() {
-    this.db.close();
+    close() {
+      this.db.close();
+    }
   }
-}
 
-module.exports = new Database();
+  module.exports = new Database();
+}

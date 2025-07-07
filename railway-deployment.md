@@ -23,7 +23,12 @@ I've already updated the necessary files for Railway deployment:
 3. Choose your BallisticWorks repository
 4. Railway will automatically detect it's a Node.js project
 
-### Step 3: Configure Environment Variables
+### Step 3: Add PostgreSQL Database (Recommended)
+1. In your Railway project, click "New Service"
+2. Select "PostgreSQL"
+3. Railway will automatically create a DATABASE_URL
+
+### Step 4: Configure Environment Variables
 In your Railway project dashboard, go to Variables tab and add:
 
 ```env
@@ -35,14 +40,15 @@ EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_email_password_here
 EMAIL_FROM=your_email@gmail.com
-DB_PATH=./database.sqlite
 ADMIN_EMAIL=admin@ballisticworks.com
 ADMIN_STEAM_ID=your_steam_id_here
 ```
 
-**Important:** Railway will automatically set `PORT`, `SERVER_URL`, and `CLIENT_URL` based on your deployment.
+**Important:** 
+- Railway will automatically set `PORT`, `SERVER_URL`, `CLIENT_URL`, and `DATABASE_URL`
+- The app will automatically use PostgreSQL if DATABASE_URL is present, otherwise SQLite
 
-### Step 4: Deploy
+### Step 5: Deploy
 1. Railway will automatically build and deploy your app
 2. You'll get a URL like `https://your-app-name.railway.app`
 3. The build process will:

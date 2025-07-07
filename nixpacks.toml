@@ -1,9 +1,10 @@
 [phases.setup]
-nixPkgs = ['nodejs-18_x', 'npm-9_x']
+nixPkgs = ['nodejs-18_x', 'npm-9_x', 'python3', 'make', 'gcc', 'sqlite']
 
 [phases.install]
 cmds = [
   'npm install --include=dev',
+  'npm rebuild sqlite3',
   'cd client && npm install --include=dev'
 ]
 
