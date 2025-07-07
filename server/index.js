@@ -16,6 +16,12 @@ const shopRoutes = require('./routes/shop');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 // Middleware
 app.use(helmet());
 app.use(cors({
@@ -67,6 +73,18 @@ passport.deserializeUser((user, done) => {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Health check (before other routes)
+app.get('/health', (req, res) => {
+  console.log('Health check requested');
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Test endpoint (before other routes)
+app.get('/test', (req, res) => {
+  console.log('Test endpoint requested');
+  res.json({ message: 'Server is working!', port: PORT });
+});
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/shop', shopRoutes);
@@ -75,25 +93,17 @@ app.use('/api/user', userRoutes);
 
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  const buildPath = path.join(__dirname, '../client/build');
+  console.log(`Serving static files from: ${buildPath}`);
+  app.use(express.static(buildPath));
   
   // Handle React routing, return all requests to React app (must be last)
   app.get('*', (req, res) => {
     const indexPath = path.join(__dirname, '../client/build', 'index.html');
-    console.log(`Serving React app from: ${indexPath}`);
+    console.log(`Serving React app from: ${indexPath} for ${req.path}`);
     res.sendFile(indexPath);
   });
 }
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
-
-// Test endpoint
-app.get('/test', (req, res) => {
-  res.json({ message: 'Server is working!', port: PORT });
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -102,9 +112,24 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Server URL: ${process.env.SERVER_URL || `http://localhost:${PORT}`}`);
-  console.log(`Client URL: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 Server URL: ${process.env.SERVER_URL || `http://localhost:${PORT}`}`);
+  console.log(`🌐 Client URL: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
+  console.log(`⚙️  Environment: ${process.env.NODE_ENV}`);
+  console.log(`🗄️  Database: ${process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite'}`);
+  console.log(`✅ Server ready to accept connections`);
+});
+
+// Handle server errors
+server.on('error', (err) => {
+  console.error('❌ Server error:', err);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('📴 SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ Process terminated');
+  });
 });
