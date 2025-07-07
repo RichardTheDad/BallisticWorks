@@ -15,8 +15,10 @@ console.log(`   NODE_ENV: ${process.env.NODE_ENV}`);
 console.log(`   PORT: ${process.env.PORT}`);
 console.log(`   All env keys containing PORT:`, Object.keys(process.env).filter(k => k.includes('PORT')));
 
-const PORT = process.env.PORT || 8080;
-console.log(`🔧 Final PORT: ${PORT}`);
+// Force port 5000 to match Railway's routing configuration
+const PORT = 5000;
+console.log(`🔧 Final PORT: ${PORT} (forced to match Railway routing)`);
+console.log(`🔧 Railway provided PORT: ${process.env.PORT}`);
 
 // Import routes
 const authRoutes = require('./routes/auth');
