@@ -10,6 +10,8 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+console.log(`🔧 Starting with PORT: ${PORT} (from env: ${process.env.PORT})`);
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const shopRoutes = require('./routes/shop');

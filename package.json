@@ -10,6 +10,7 @@
     "build": "npm install && cd client && npm install && npm run build",
     "install-all": "npm install && cd client && npm install",
     "start": "node server/index.js",
+    "test-railway": "node railway-port-fix.js",
     "postinstall": "cd client && npm install"
   },
   "dependencies": {
