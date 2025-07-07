@@ -4,7 +4,7 @@
     "buildCommand": "npm install && cd client && npm install && npm run build"
   },
   "deploy": {
-    "startCommand": "npm run test-railway",
+    "startCommand": "npm start",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
