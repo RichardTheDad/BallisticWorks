@@ -3,12 +3,14 @@ nixPkgs = ['nodejs-18_x', 'npm-9_x']
 
 [phases.install]
 cmds = [
-  'npm ci --include=dev',
-  'cd client && npm ci --include=dev'
+  'npm install --include=dev',
+  'cd client && npm install --include=dev'
 ]
 
 [phases.build]
-cmds = ['cd client && npm run build']
+cmds = [
+  'cd client && CI=false npm run build'
+]
 
 [start]
 cmd = 'npm start'

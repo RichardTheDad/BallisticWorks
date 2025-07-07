@@ -347,7 +347,7 @@ const Admin: React.FC = () => {
                           <div className="w-12 h-12 bg-vault-bg rounded-lg overflow-hidden">
                             {product.image_url ? (
                               <img 
-                                src={`http://localhost:5000${product.image_url}`} 
+                                src={`${window.location.origin}${product.image_url}`} 
                                 alt={product.name}
                                 className="w-full h-full object-cover"
                               />

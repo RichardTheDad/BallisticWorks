@@ -146,7 +146,7 @@ const Shop: React.FC = () => {
                   <div className="aspect-square bg-vault-card rounded-lg mb-3 overflow-hidden">
                     {product.image_url ? (
                       <img 
-                        src={`http://localhost:5000${product.image_url}`} 
+                        src={`${window.location.origin}${product.image_url}`} 
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
@@ -278,7 +278,7 @@ const Shop: React.FC = () => {
                   <div className="w-12 h-12 bg-vault-bg rounded-lg flex items-center justify-center">
                     {product.image_url ? (
                       <img 
-                        src={`http://localhost:5000${product.image_url}`} 
+                        src={`${window.location.origin}${product.image_url}`} 
                         alt={product.name}
                         className="w-full h-full object-cover rounded-lg"
                       />

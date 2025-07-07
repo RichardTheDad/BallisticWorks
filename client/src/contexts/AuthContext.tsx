@@ -52,7 +52,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = () => {
-    window.location.href = `${axios.defaults.baseURL}/auth/steam`;
+    const baseURL = axios.defaults.baseURL || '';
+    window.location.href = `${baseURL}/auth/steam`;
   };
 
   const logout = async () => {
