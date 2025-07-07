@@ -8,10 +8,15 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-console.log(`🔧 Starting with PORT: ${PORT} (from env: ${process.env.PORT})`);
-console.log(`🔧 Railway expects app on: PORT ${process.env.PORT || 'not set'}`);
+// Debug all environment variables related to ports
+console.log('🔧 Environment Debug:');
+console.log(`   NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`   PORT: ${process.env.PORT}`);
+console.log(`   All env keys containing PORT:`, Object.keys(process.env).filter(k => k.includes('PORT')));
+
+const PORT = process.env.PORT || 8080;
+console.log(`🔧 Final PORT: ${PORT}`);
 
 // Import routes
 const authRoutes = require('./routes/auth');
