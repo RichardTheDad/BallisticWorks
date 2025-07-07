@@ -77,15 +77,22 @@ app.use('/api/user', userRoutes);
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
   
-  // Handle React routing, return all requests to React app
+  // Handle React routing, return all requests to React app (must be last)
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    const indexPath = path.join(__dirname, '../client/build', 'index.html');
+    console.log(`Serving React app from: ${indexPath}`);
+    res.sendFile(indexPath);
   });
 }
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Test endpoint
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is working!', port: PORT });
 });
 
 // Error handling middleware
@@ -95,7 +102,9 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Server URL: ${process.env.SERVER_URL || `http://localhost:${PORT}`}`);
   console.log(`Client URL: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });
