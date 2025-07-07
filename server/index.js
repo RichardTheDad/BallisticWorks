@@ -67,6 +67,15 @@ passport.deserializeUser((user, done) => {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Serve React build files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/api/shop', shopRoutes);
