@@ -63,16 +63,10 @@ console.log(`   Realm: ${process.env.SERVER_URL || 'http://localhost:5000'}`);
 console.log(`   API Key exists: ${!!process.env.STEAM_API_KEY}`);
 
 passport.use(new SteamStrategy({
-  returnURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/auth/steam/return`,
-  realm: process.env.SERVER_URL || 'http://localhost:5000',
-  apiKey: process.env.STEAM_API_KEY
+  // ...
 }, (identifier, profile, done) => {
-  console.log('🔄 Steam strategy callback triggered');
-  console.log('📝 Steam profile received:', {
-    id: profile.id,
-    displayName: profile.displayName,
-    avatar: profile.photos?.[0]?.value
-  });
+  console.log('Steam strategy callback triggered');
+  console.log('Steam profile received:', profile);
   
   // Steam profile processing
   const user = {
@@ -81,6 +75,12 @@ passport.use(new SteamStrategy({
     avatar: profile.photos[0].value,
     profileUrl: profile._json.profileurl
   };
+  
+  console.log('User object:', user);
+  
+  // Set the req.user object
+  req.user = user;
+  
   return done(null, user);
 }));
 
@@ -89,6 +89,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((user, done) => {
+  console.log('Deserialize user:', user);
   done(null, user);
 });
 
